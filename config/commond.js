@@ -5,3 +5,4 @@ module.exports = {
   projectName: args[0],
   config: config
 }
+
