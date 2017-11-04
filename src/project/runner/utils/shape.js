@@ -1,5 +1,5 @@
 export class Shape {
-    constructor (config) {
+    constructor(config) {
         /** @public  {int} y coordinate y of the canvas context **/
         this.y = config.y
 
@@ -41,11 +41,11 @@ export class Shape {
     draw(context) {
         let img = new Image()
         img.src = this.img_src
-        let max_w = img.width
+        let maxW = img.width
         context.drawImage(img, this.img_sX, this.img_sY, this.img_sW,
             this.img_sH, this.x, this.y, this.w, this.h)
         context.globalCompositeOperation = 'source-over'
-        if (this.img_sX === max_w - this.increment) {
+        if (this.img_sX === maxW - this.increment) {
             this.increment *= -1
         }
         if (this.img_sX === 0) {

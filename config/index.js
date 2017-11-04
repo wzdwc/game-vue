@@ -6,11 +6,6 @@ var url = require('url')
 var proxy = {
     '/sapi': {
         target: 'https://xxx',
-        // target: 'https://m.shanhs.com',
-        // pathRewrite: {
-        //     '^/sapi/gateway/offline-sapi' : '/'
-        // },
-        // target: 'http://m.shanhs.com',
         changeOrigin: true
     },
     '/proxy': {

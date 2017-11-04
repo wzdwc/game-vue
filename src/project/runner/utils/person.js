@@ -1,7 +1,7 @@
 import Shape from 'shape'
 
 class Person extends Shape {
-    constructor (config, status, name, level, distance) {
+    constructor(config, status, name, level, distance) {
         super({config})
         this.status = status
         this.name = name
