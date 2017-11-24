@@ -1,17 +1,16 @@
 export default class Runner {
-    constructor(documentId, runway, bg, limitTime, maxV, person, theEndShape, winW, winH, total, runV, shapes, animationV, downV) {
+    constructor({document, runway, bg, limitTime, maxV, person, theEndShape, winW, winH, total, runV, animationV}) {
         this.runway = runway
         this.maxV = maxV
         this.winW = winW
         this.bg = bg
         this.winH = winH
         this.total = total
-        this.downV = downV
         this.runV = runV
         this.limitTime = limitTime
         this.limitTimeInterVal = null
         this.animationV = animationV
-        this.shapes = shapes
+        this.shapes = null
         this.downVSetTime = null
         this.isPlay = false
         this.showTime = false
@@ -19,7 +18,7 @@ export default class Runner {
         this.showButton = false
         this.runMetres = 0
         this.ready123 = 1
-        this.canvas = document.getElementById(documentId)
+        this.canvas = document
         this.cxt = this.canvas.get(0).getContext('2d')              // 注意：循环引用
         this.person = person | {}
         this.theEndShape = theEndShape | {}
@@ -100,7 +99,7 @@ export default class Runner {
         if (this.runV > 8) {
             this.runV -= 1
         }
-        this.downVSetTime = setTimeout(this.downV, 1000)
+        this.downVSetTime = setTimeout(this.autoDeceleration, 1000)
     }
 
     init() {

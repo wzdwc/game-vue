@@ -1,12 +1,12 @@
-import Shape from 'shape'
+import Shape from 'src/project/runner/utils/Shape'
 
 class Person extends Shape {
-    constructor(config, status, name, level, distance) {
+    constructor(config) {
         super({config})
-        this.status = status
-        this.name = name
-        this.level = level
-        this.distance = distance
+        this.status = config.status
+        this.name = config.name
+        this.level = config.level
+        this.distance = config.distance
     }
 
     // autoDeceleration() {

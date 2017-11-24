@@ -12,7 +12,7 @@
                 p.metres 腻害，跑了
                     span(id="metres") 84
                     | Km
-                .result
+                .resul
                     p.name.myName name
                     p 腻害！跑了
                         span.levelCount 城市
@@ -264,6 +264,9 @@
     }
 </style>
 <script>
+    import Runner from '../../utils/Runner'
+    import Person from '../../utils/Person'
+    import Shape from '../../utils/Shape'
     export default {
         data() {
             return {
@@ -285,6 +288,38 @@
                     this.clickCount = 0
                 }
             }
+        },
+        mounted() {
+            this.runner = new Runner({
+                runway    : new Shape({}),
+                maxV      : 8,
+                winW      : window.innerWidth,
+                bg        : new Shape({}),
+                winH      : window.innerHeight,
+                total     : 0,
+                runV      : 10,
+                limitTime : 100,
+                animationV: 2,
+                canvas    : document,
+                person    : new Person({
+                    x        : 0,
+                    y        : 0,
+                    h        : 0,
+                    w        : 0,
+                    v        : 0,
+                    img_src  : '',
+                    img_sX   : 0,
+                    img_sY   : 0,
+                    img_sW   : 0,
+                    img_sH   : 0,
+                    increment: 0,
+                    status   : 0,
+                    name     : 0,
+                    level    : 0,
+                    distant  : 0,
+                }),
+                theEndShape: new Shape({}),
+            })
         },
         components: {},
     }
