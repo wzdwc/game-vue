@@ -1,8 +1,8 @@
-import Shape from 'src/project/runner/utils/Shape'
+import Shape from './Shape'
 
-class Person extends Shape {
+export default class Person extends Shape {
     constructor(config) {
-        super({config})
+        super(config)
         this.status = config.status
         this.name = config.name
         this.level = config.level
@@ -21,6 +21,3 @@ class Person extends Shape {
     //     }, 1000);
     // }
 }
-
-
-let a = new Person()

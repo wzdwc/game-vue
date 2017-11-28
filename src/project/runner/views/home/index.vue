@@ -16,7 +16,7 @@
                     p.name.myName name
                     p 腻害！跑了
                         span.levelCount 城市
-            canvas(id="myCanvas" width="1000" height="1000")
+            canvas(ref='details',width="1000" height="1000")
             .button(id="button")
                 section
                     p
@@ -25,8 +25,7 @@
                     p
                         span.finger-r(:class='{active:showFingerR}',@click="touchHandle")
                         i
-
-
+        audio(ref="audio" data-src="bg.mp3" loop="loop")
 </template>
 <style lang="less" rel="stylesheet/less" scoped>
     @import "../../../../assets/less/fn.less";
@@ -264,16 +263,19 @@
     }
 </style>
 <script>
-    import Runner from '../../utils/Runner'
-    import Person from '../../utils/Person'
-    import Shape from '../../utils/Shape'
+    import Runner from '../../utils/Runner.js'
+    import Person from '../../utils/Person.js'
+    import Shape from '../../utils/Shape.js'
     export default {
         data() {
             return {
                 showFingerL: false,
                 showFingerR: false,
+                winW       : window.innerWidth,
+                winH       : window.innerHeight,
                 clickCount : 0,
-                runner     : {}
+                runner     : {},
+                imgAddress : ['/game/static/runner/persons.png', '/game/static/runner/tree.png', '/game/static/runner/ready.png', '/game/static/runner/game-bg.jpg', '/game/static/runner/theEnd.png', '/game/static/runner/msg-bg.png', '/game/static/runner/prizelist-bg.jpg']
             }
         },
         methods: {
@@ -287,39 +289,59 @@
                     }
                     this.clickCount = 0
                 }
+            },
+            initCanvas() {
+                this.runner = new Runner({
+                    runway: new Shape({
+                        img_src  : this.imgAddress[1],
+                        img_sW   : 640,
+                        img_sH   : 960,
+                        increment: 640,
+                    }),
+                    maxV: 8,
+                    bg  : new Shape({
+                        img_src  : this.imgAddress[3],
+                        img_sW   : 640,
+                        img_sH   : 960,
+                        increment: 0,
+                    }),
+                    total     : 0,
+                    runV      : 10,
+                    limitTime : 100,
+                    animationV: 2,
+                    document  : this.$refs.details,
+                    audio     : this.$refs.audio,
+                    person    : new Person({
+                        x        : (this.winW - 125) / 2,
+                        y        : (this.winH - 125) / 2,
+                        w        : 111,
+                        h        : 275,
+                        img_src  : this.imgAddress[0],
+                        img_sW   : 162,
+                        img_sH   : 400,
+                        increment: 162,
+                        distance : 0,
+                        status   : 0,
+                        name     : 0,
+                        level    : 0,
+                        distant  : 0,
+                    }),
+                    theEndShape: new Shape({
+                        x        : (this.winW - 175) / 2,
+                        y        : (this.winH - 75) / 2,
+                        w        : 175,
+                        h        : 323,
+                        img_src  : this.imgAddress[2],
+                        img_sW   : 246,
+                        img_sH   : 455,
+                        increment: 0,
+                    }),
+                })
+                this.runner.init()
             }
         },
         mounted() {
-            this.runner = new Runner({
-                runway    : new Shape({}),
-                maxV      : 8,
-                winW      : window.innerWidth,
-                bg        : new Shape({}),
-                winH      : window.innerHeight,
-                total     : 0,
-                runV      : 10,
-                limitTime : 100,
-                animationV: 2,
-                canvas    : document,
-                person    : new Person({
-                    x        : 0,
-                    y        : 0,
-                    h        : 0,
-                    w        : 0,
-                    v        : 0,
-                    img_src  : '',
-                    img_sX   : 0,
-                    img_sY   : 0,
-                    img_sW   : 0,
-                    img_sH   : 0,
-                    increment: 0,
-                    status   : 0,
-                    name     : 0,
-                    level    : 0,
-                    distant  : 0,
-                }),
-                theEndShape: new Shape({}),
-            })
+            this.initCanvas()
         },
         components: {},
     }

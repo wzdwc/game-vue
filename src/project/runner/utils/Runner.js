@@ -1,16 +1,16 @@
 export default class Runner {
-    constructor({document, runway, bg, limitTime, maxV, person, theEndShape, winW, winH, total, runV, animationV}) {
+    constructor({document, audio, runway, bg, limitTime, maxV, person, theEndShape, winW, winH, total, runV, animationV}) {
         this.runway = runway
         this.maxV = maxV
-        this.winW = winW
+        this.winW = winW || window.innerWidth
         this.bg = bg
-        this.winH = winH
+        this.winH = winH || window.innerHeight
         this.total = total
         this.runV = runV
         this.limitTime = limitTime
         this.limitTimeInterVal = null
         this.animationV = animationV
-        this.shapes = null
+        this.shapes = []
         this.downVSetTime = null
         this.isPlay = false
         this.showTime = false
@@ -19,16 +19,19 @@ export default class Runner {
         this.runMetres = 0
         this.ready123 = 1
         this.canvas = document
-        this.cxt = this.canvas.get(0).getContext('2d')              // 注意：循环引用
-        this.person = person | {}
-        this.theEndShape = theEndShape | {}
+        this.audio = audio
+        this.cxt = this.canvas.getContext('2d')              // 注意：循环引用
+        this.person = person || {}
+        this.theEndShape = theEndShape || {}
     }
 
     playAnimation(isInit) {
         let canvas = this.cxt.canvas
         this.cxt.clearRect(0, 0, canvas.width, canvas.height)
         // 遍历画布元素，添加到画布中
-        this.shapes.forEach(item => item.draw(this.cxt))
+        this.shapes.forEach(item => {
+            item.draw(this.cxt)
+        })
         if (!isInit && this.playAnimation) {
             setTimeout(() => {
                 this.playAnimation(false, this.cxt)
@@ -89,7 +92,38 @@ export default class Runner {
     }
 
     loading() {
-
+        let imgId = 0
+        let audioElement = this.audio
+        let loadImg = () => {
+            let imgObj = new Image()
+            imgObj.src = this.imgAddress[imgId]
+            imgObj.onload = () => {
+                if (imgObj.complete === true) {
+                    this.loadingImages.push(imgObj)
+                    imgId++
+                    if (imgId < this.imgAddress.length) {
+                        loadImg()
+                    }
+                    if (imgId === this.imgAddress.length) {
+                        audioElement.play()
+                    }
+                }
+            }
+        }
+        console.log('audio', this.audio)
+        audioElement.src = this.audio
+        if (audioElement.readyState === 4) {  // android会走此逻辑
+            loadImg()
+            audioElement.load()    // 需要主动触发下，不然不会加载
+            audioElement.pause()
+        } else {    // iOS走此逻辑
+            audioElement.addEventListener('canplaythrough', () => {
+                loadImg()
+            }, false)
+            audioElement.load()    // 需要主动触发下，不然不会加载
+            audioElement.pause()
+        }
+        audioElement.pause()
     }
 
     autoDeceleration() {
@@ -103,15 +137,13 @@ export default class Runner {
     }
 
     init() {
-        this.winW = window.innerWidth
-        this.winH = window.innerHeight
-        this.canvas.attr('width', this.winW)
-        this.canvas.attr('height', this.winH)
+        this.canvas.width = this.winW
+        this.canvas.height = this.winH
         this.cxt.fillStyle = 'rgb(0,0,0)'
         this.shapes.push(this.bg)
         this.shapes.push(this.runway)
-        this.shapes.push(this.ready)
         this.showReady = true
         this.showButton = true
+        this.start()
     }
 }
